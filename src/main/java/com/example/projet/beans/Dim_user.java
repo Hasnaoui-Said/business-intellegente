@@ -1,29 +1,44 @@
 package com.example.projet.beans;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
+@Table(	name = "Dim_user", 
+uniqueConstraints = { 
+	@UniqueConstraint(columnNames = "username"),
+	@UniqueConstraint(columnNames = "email") 
+})
 public class Dim_user  implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private long user_id;
-	private String reference;
-	private String userName;
+	@NotBlank
+	@Size(max = 20)
+	private String username;
+	@NotBlank
+	@Size(max = 50)
+	@Email
 	private String email;
 	private String firstName;
 	@JsonFormat(pattern ="dd-mm-yyyy")
@@ -31,20 +46,47 @@ public class Dim_user  implements Serializable{
 	private String lastName;
 	private String phone;
 	private String ville;
-	private String role;
+	@NotBlank
+	@Size(max = 120)
 	private String password;
 	private String stateUser;//active or inactifs
 	@ManyToOne
 	private Dim_country ct_id;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(	name = "user_roles", 
+				joinColumns = @JoinColumn(name = "user_id"), 
+				inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Dim_roles> roles = new HashSet<>();
 	
-	@OneToMany(mappedBy = "userId")
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private List<Cfg_user_role> roles = new ArrayList<Cfg_user_role>();
-	
-	public List<Cfg_user_role> getRoles() {
-		return roles;
+	public Dim_user() {
 	}
-	
+
+	public Dim_user(String username, String email, String password) {
+		super();
+		this.username = username;
+		this.email = email;
+		this.password = password;
+	}
+	public Dim_user(long user_id, @NotBlank @Size(max = 20) String username,
+			@NotBlank @Size(max = 50) @Email String email, String firstName, Date dateNassance, String lastName,
+			String phone, String ville, @NotBlank @Size(max = 120) String password, String stateUser,
+			Dim_country ct_id, Set<Dim_roles> roles) {
+		super();
+		this.user_id = user_id;
+		this.username = username;
+		this.email = email;
+		this.firstName = firstName;
+		this.dateNassance = dateNassance;
+		this.lastName = lastName;
+		this.phone = phone;
+		this.ville = ville;
+		this.password = password;
+		this.stateUser = stateUser;
+		this.ct_id = ct_id;
+		this.roles = roles;
+	}
+
+
 	public Date getDateNassance() {
 		return dateNassance;
 	}
@@ -53,22 +95,16 @@ public class Dim_user  implements Serializable{
 		this.dateNassance = dateNassance;
 	}
 
-	public void setRoles(List<Cfg_user_role> roles) {
+	public Set<Dim_roles> getRoles() {
+		return roles;
+	}
+
+
+	public void setRoles(Set<Dim_roles> roles) {
 		this.roles = roles;
 	}
-	
-	public String getRole() {
-		return role;
-	}
-	public void setRole(String role) {
-		this.role = role;
-	}
-	public String getReference() {
-		return reference;
-	}
-	public void setReference(String reference) {
-		this.reference = reference;
-	}
+
+
 	public long getUser_id() {
 		return user_id;
 	}
@@ -119,11 +155,11 @@ public class Dim_user  implements Serializable{
 		this.ct_id = ct_id;
 	}
 	
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String userName) {
+		this.username = userName;
 	}
 	public String getStateUser() {
 		return stateUser;

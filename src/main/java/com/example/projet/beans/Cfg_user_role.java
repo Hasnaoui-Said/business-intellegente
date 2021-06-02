@@ -16,7 +16,7 @@ public class Cfg_user_role  implements Serializable{
 	private long cfgId;
 
 	@ManyToOne
-	private Dim_role roleId;
+	private Dim_roles roleId;
 	@ManyToOne
 	private Dim_user userId;
 	
@@ -26,10 +26,10 @@ public class Cfg_user_role  implements Serializable{
 	public void setCfg_id(long cfg_id) {
 		this.cfgId = cfg_id;
 	}
-	public Dim_role getRole_id() {
+	public Dim_roles getRole_id() {
 		return roleId;
 	}
-	public void setRole_id(Dim_role role_id) {
+	public void setRole_id(Dim_roles role_id) {
 		this.roleId = role_id;
 	}
 	public Dim_user getUser_id() {
@@ -57,6 +57,10 @@ public class Cfg_user_role  implements Serializable{
 		if (cfgId != other.cfgId)
 			return false;
 		return true;
+	}
+	public Object getName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

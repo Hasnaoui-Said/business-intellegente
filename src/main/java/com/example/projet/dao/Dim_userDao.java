@@ -10,6 +10,6 @@ public interface Dim_userDao extends JpaRepository<Dim_user, Long> {
 
 	public Dim_user findByEmail(String ref);
 	public Dim_user findByEmailAndPassword(String email,String password);
-	public Dim_user findByReference(String ref);
+	public Dim_user findByUsername(String ref);
 	public int deleteByEmail(String ref);
 }
