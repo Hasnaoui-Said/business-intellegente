@@ -40,6 +40,7 @@ public class Dim_user  implements Serializable{
 	@Size(max = 50)
 	@Email
 	private String email;
+
 	private String firstName;
 	@JsonFormat(pattern ="dd-mm-yyyy")
 	private Date dateNassance;
